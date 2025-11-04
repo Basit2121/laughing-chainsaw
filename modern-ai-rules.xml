@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nextjs_flask_development_rules>
+<nextjs_fastapi_development_rules>
+<rules>
+    <rule id="1">
+        <description>Always load and follow ./modern-ai-rules.xml before any code generation step.</description>
+    </rule>
+</rules>
   
   <project_structure>
-    <rule id="1">Separate frontend (Next.js) and backend (Flask) into distinct directories: /frontend and /backend</rule>
+    <rule id="1">Separate frontend (Next.js) and backend (FastAPI) into distinct directories: /frontend and /backend</rule>
     <rule id="2">Use environment variables for configuration (e.g., API URLs, secrets) in both frontend (.env.local) and backend (.env)</rule>
     <rule id="3">Maintain clear separation of concerns between client-side and server-side code</rule>
     <rule id="4">Never commit sensitive config files to git; provide example files (e.g., .env.example) instead</rule>
@@ -36,22 +41,22 @@
     <rule id="26">Include high-quality, optimized images where applicable to enhance visual appeal without compromising performance</rule>
   </ui_ux_design>
 
-  <backend_flask>
-    <rule id="27">Organize routes using Flask Blueprints for modular endpoint management</rule>
-    <rule id="28">Structure backend with separate blueprints for each feature/domain (e.g., /blueprints/users.py, /blueprints/posts.py)</rule>
-    <rule id="29">Implement proper error handling with abort() and custom error handlers using @app.errorhandler</rule>
-    <rule id="30">Implement proper CORS configuration using Flask-CORS to allow frontend origin</rule>
-    <rule id="31">Implement proper logging for debugging and monitoring using Python's logging module</rule>
-    <rule id="32">Use environment variables for sensitive configuration (database URLs, API keys, SECRET_KEY)</rule>
-    <rule id="33">Implement proper authentication and authorization (JWT, session-based, OAuth2, etc.)</rule>
-    <rule id="34">Create a health check endpoint (e.g., /health or /api/health) that returns status and timestamp, and verifies database connectivity</rule>
-    <rule id="35">DO NOT USE OOP - avoid creating classes for business logic; use pure functions and utility modules instead</rule>
-    <rule id="36">Keep backend code simple and procedural - use functions that take inputs and return outputs</rule>
-    <rule id="37">Use Flask's request object to access incoming data and jsonify() for JSON responses</rule>
-    <rule id="38">Implement input validation using custom validation functions or libraries like marshmallow</rule>
-    <rule id="39">Use Flask's before_request and after_request decorators for request/response processing</rule>
-    <rule id="40">Set app.config['JSON_SORT_KEYS'] = False to preserve JSON key order in responses</rule>
-  </backend_flask>
+  <backend_fastapi>
+    <rule id="27">Use Pydantic models for request/response validation and serialization</rule>
+    <rule id="28">Implement proper error handling with HTTPException and custom exception handlers</rule>
+    <rule id="29">Use dependency injection for database connections, authentication, and shared logic</rule>
+    <rule id="30">Organize routes using APIRouter for modular endpoint management</rule>
+    <rule id="31">Structure backend with separate routers for each feature/domain (e.g., /routers/users.py, /routers/posts.py)</rule>
+    <rule id="32">Implement proper CORS configuration to allow frontend origin</rule>
+    <rule id="33">Use async/await patterns for I/O operations (database, external APIs)</rule>
+    <rule id="34">Implement proper logging for debugging and monitoring</rule>
+    <rule id="35">Use environment variables for sensitive configuration (database URLs, API keys)</rule>
+    <rule id="36">Implement proper authentication and authorization (JWT, OAuth2, etc.)</rule>
+    <rule id="37">Document API endpoints with OpenAPI/Swagger automatic documentation</rule>
+    <rule id="38">Create a health check endpoint (e.g., /health or /api/health) that returns status and timestamp, and verifies database connectivity</rule>
+    <rule id="39">DO NOT USE OOP - avoid creating classes for business logic; use pure functions and utility modules instead</rule>
+    <rule id="40">Keep backend code simple and procedural - use functions that take inputs and return outputs</rule>
+  </backend_fastapi>
 
   <api_communication>
     <rule id="41">Use RESTful API design principles with proper HTTP methods (GET, POST, PUT, DELETE)</rule>
@@ -60,7 +65,7 @@
     <rule id="44">Implement API versioning (e.g., /api/v1/) for backward compatibility</rule>
     <rule id="45">Use fetch or axios in frontend for API calls, wrap in try-catch blocks</rule>
     <rule id="46">Implement request/response interceptors for authentication tokens</rule>
-    <rule id="47">Handle rate limiting and implement request throttling when necessary using Flask-Limiter</rule>
+    <rule id="47">Handle rate limiting and implement request throttling when necessary</rule>
   </api_communication>
 
   <security>
@@ -68,64 +73,60 @@
     <rule id="49">Implement HTTPS in production environments</rule>
     <rule id="50">Sanitize user inputs on both frontend and backend</rule>
     <rule id="51">Use prepared statements or ORM to prevent SQL injection</rule>
-    <rule id="52">Implement CSRF protection for state-changing operations using Flask-WTF or custom tokens</rule>
-    <rule id="53">Set secure HTTP headers (Content-Security-Policy, X-Frame-Options, etc.) using Flask-Talisman or custom middleware</rule>
-    <rule id="54">Implement proper password hashing (bcrypt, argon2) for user credentials using werkzeug.security or passlib</rule>
+    <rule id="52">Implement CSRF protection for state-changing operations</rule>
+    <rule id="53">Set secure HTTP headers (Content-Security-Policy, X-Frame-Options, etc.)</rule>
+    <rule id="54">Implement proper password hashing (bcrypt, argon2) for user credentials</rule>
     <rule id="55">Use secure session management and token expiration</rule>
-    <rule id="56">Set Flask SECRET_KEY to a strong, random value and never commit it to version control</rule>
   </security>
 
   <database>
-    <rule id="57">Use an ORM like SQLAlchemy or raw SQL with proper connection management</rule>
-    <rule id="58">Implement database migrations for schema version control using Flask-Migrate (Alembic) or custom migration system</rule>
-    <rule id="59">Store database schema definitions separately and maintain migration history</rule>
-    <rule id="60">Use connection pooling for efficient database connections</rule>
-    <rule id="61">Implement proper indexing for optimized query performance</rule>
-    <rule id="62">Never expose raw database errors to the client</rule>
-    <rule id="63">Separate database logic from business logic and API route handlers</rule>
-    <rule id="64">Write database utility functions instead of database classes - use simple functions for queries and updates</rule>
-    <rule id="65">Use Flask's teardown_appcontext to properly close database connections after each request</rule>
-    <rule id="66">Create a lightweight connection pool in db_utils.py that manages connections per request</rule>
+    <rule id="56">Use SQLAlchemy for database operations</rule>
+    <rule id="57">Implement database migrations for schema version control using Alembic or similar tools</rule>
+    <rule id="58">Store database schema definitions separately and maintain migration history</rule>
+    <rule id="59">Use connection pooling for efficient database connections</rule>
+    <rule id="60">Implement proper indexing for optimized query performance</rule>
+    <rule id="61">Never expose raw database errors to the client</rule>
+    <rule id="62">Separate database logic from business logic and API route handlers</rule>
+    <rule id="63">Write database utility functions instead of database classes - use simple functions for queries and updates</rule>
   </database>
 
   <performance>
-    <rule id="67">Implement caching strategies (Redis, Flask-Caching) for frequently accessed data</rule>
-    <rule id="68">Use pagination for large data sets in API responses</rule>
-    <rule id="69">Implement lazy loading for components and images in frontend</rule>
-    <rule id="70">Optimize database queries to avoid N+1 problems</rule>
-    <rule id="71">Use Next.js static generation where possible for better performance</rule>
-    <rule id="72">Implement proper code splitting in frontend bundle</rule>
+    <rule id="64">Implement caching strategies (Redis, in-memory) for frequently accessed data</rule>
+    <rule id="65">Use pagination for large data sets in API responses</rule>
+    <rule id="66">Implement lazy loading for components and images in frontend</rule>
+    <rule id="67">Optimize database queries to avoid N+1 problems</rule>
+    <rule id="68">Use Next.js static generation where possible for better performance</rule>
+    <rule id="69">Implement proper code splitting in frontend bundle</rule>
   </performance>
 
   <code_quality_and_simplicity>
-    <rule id="73">CRITICAL: DO NOT USE OBJECT-ORIENTED PROGRAMMING (OOP) - avoid creating classes for business logic, services, or utilities</rule>
-    <rule id="74">Write procedural, functional code that is simple and easy to understand</rule>
-    <rule id="75">Use pure functions wherever possible - functions should have clear inputs and outputs without side effects</rule>
-    <rule id="76">Keep functions small and focused on single responsibility (max 20-30 lines per function)</rule>
-    <rule id="77">Use descriptive function names that clearly indicate their purpose (verb-noun format: get_user, create_post, validate_email)</rule>
-    <rule id="78">Include docstrings/comments for all functions explaining purpose, parameters, return values, and any side effects</rule>
-    <rule id="79">Avoid deep nesting - use early returns and guard clauses to flatten code structure (max 2-3 levels of indentation)</rule>
-    <rule id="80">Use meaningful variable names that describe their purpose, avoiding single-letter names except for simple iterators</rule>
-    <rule id="81">Follow consistent naming conventions (camelCase for JavaScript, snake_case for Python)</rule>
-    <rule id="82">Use ESLint and Prettier for frontend code formatting</rule>
-    <rule id="83">Use Black and isort for backend Python code formatting</rule>
-    <rule id="84">Follow PEP 8 style guidelines for Python code</rule>
-    <rule id="85">Add comments for complex logic, not obvious code</rule>
-    <rule id="86">Keep dependencies up to date and audit for security vulnerabilities</rule>
-    <rule id="87">Avoid global variables - use function parameters and return values to pass data between functions</rule>
-    <rule id="88">Separate concerns clearly - database logic, business logic, and presentation logic should be in different modules/files</rule>
-    <rule id="89">Organize code in simple utility modules with related functions grouped together (e.g., db_utils.py, auth_utils.py, validation_utils.py)</rule>
-    <rule id="90">Keep code readable and maintainable - prioritize clarity over cleverness</rule>
-    <rule id="91">Write self-documenting code where the logic is clear from variable and function names alone</rule>
+    <rule id="70">CRITICAL: DO NOT USE OBJECT-ORIENTED PROGRAMMING (OOP) - avoid creating classes for business logic, services, or utilities</rule>
+    <rule id="71">Write procedural, functional code that is simple and easy to understand</rule>
+    <rule id="72">Use pure functions wherever possible - functions should have clear inputs and outputs without side effects</rule>
+    <rule id="73">Keep functions small and focused on single responsibility (max 20-30 lines per function)</rule>
+    <rule id="74">Use descriptive function names that clearly indicate their purpose (verb-noun format: get_user, create_post, validate_email)</rule>
+    <rule id="75">Include docstrings/comments for all functions explaining purpose, parameters, return values, and any side effects</rule>
+    <rule id="76">Avoid deep nesting - use early returns and guard clauses to flatten code structure (max 2-3 levels of indentation)</rule>
+    <rule id="77">Use meaningful variable names that describe their purpose, avoiding single-letter names except for simple iterators</rule>
+    <rule id="78">Follow consistent naming conventions (camelCase for JavaScript, snake_case for Python)</rule>
+    <rule id="79">Use ESLint and Prettier for frontend code formatting</rule>
+    <rule id="80">Use Black and isort for backend Python code formatting</rule>
+    <rule id="81">Follow PEP 8 style guidelines for Python code</rule>
+    <rule id="82">Add comments for complex logic, not obvious code</rule>
+    <rule id="83">Keep dependencies up to date and audit for security vulnerabilities</rule>
+    <rule id="84">Avoid global variables - use function parameters and return values to pass data between functions</rule>
+    <rule id="85">Separate concerns clearly - database logic, business logic, and presentation logic should be in different modules/files</rule>
+    <rule id="86">Organize code in simple utility modules with related functions grouped together (e.g., db_utils.py, auth_utils.py, validation_utils.py)</rule>
+    <rule id="87">Keep code readable and maintainable - prioritize clarity over cleverness</rule>
+    <rule id="88">Write self-documenting code where the logic is clear from variable and function names alone</rule>
   </code_quality_and_simplicity>
 
   <development_workflow>
-    <rule id="92">Include a requirements.txt or pyproject.toml file for Python dependencies</rule>
-    <rule id="93">Include a package.json file for JavaScript dependencies</rule>
-    <rule id="94">Provide clear setup instructions in README.md for both frontend and backend</rule>
-    <rule id="95">Include .gitignore files to exclude node_modules, venv, __pycache__, .env files, and build artifacts</rule>
-    <rule id="96">Enable hot-reload for development: Next.js dev server auto-reloads on changes, use Flask debug mode with app.run(debug=True)</rule>
-    <rule id="97">Set app.config['TEMPLATES_AUTO_RELOAD'] = True for automatic template reloading in development</rule>
+    <rule id="89">Include a requirements.txt or pyproject.toml file for Python dependencies</rule>
+    <rule id="90">Include a package.json file for JavaScript dependencies</rule>
+    <rule id="91">Provide clear setup instructions in README.md for both frontend and backend</rule>
+    <rule id="92">Include .gitignore files to exclude node_modules, venv, __pycache__, .env files, and build artifacts</rule>
+    <rule id="93">Enable hot-reload for development: Next.js dev server auto-reloads on changes, use uvicorn --reload for FastAPI</rule>
   </development_workflow>
 
-</nextjs_flask_development_rules>
+</nextjs_fastapi_development_rules>
