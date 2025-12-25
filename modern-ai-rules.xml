@@ -1,133 +1,423 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nextjs_fastapi_development_rules>
-  <rules>
+<rules>
     <rule id="1">
-      <description>Always load and follow ./modern-ai-rules.xml before any code generation step.</description>
+        <description>Always load and follow /.ai-rules.xml before any code generation step.</description>
     </rule>
-  </rules>
+</rules>
 
-  <project_structure>
-    <rule id="1">Separate frontend (Next.js) and backend (FastAPI) into distinct directories: /frontend and /backend</rule>
-    <rule id="2">Use a shared config.json file for configuration (API URLs, secrets, database credentials) accessible to both frontend and backend</rule>
-    <rule id="3">Maintain clear separation of concerns between client-side and server-side code</rule>
-    <rule id="4">Never commit config.json with real credentials; provide a config.example.json file instead</rule>
-  </project_structure>
+<projectStructure>
+    <description>The project root directory MUST contain three main folders: "backend", "frontend", and "tests". All backend code (FastAPI) must be in the backend/ folder, all frontend code (Next.js) must be in the frontend/ folder, and all standalone tests must be in the tests/ folder.</description>
+    <backendPath>backend/</backendPath>
+    <frontendPath>frontend/</frontendPath>
+    <testsPath>tests/</testsPath>
+</projectStructure>
 
-  <frontend_nextjs_react>
-    <rule id="5">Use functional components with React Hooks (useState, useEffect, useContext, etc.)</rule>
-    <rule id="6">Implement proper error boundaries for graceful error handling</rule>
-    <rule id="7">Use Next.js App Router (app directory) for modern routing patterns</rule>
-    <rule id="8">Leverage server components by default, use 'use client' directive only when necessary</rule>
-    <rule id="9">Implement proper loading states with loading.js and Suspense boundaries</rule>
-    <rule id="10">Use Next.js Image component for optimized image loading</rule>
-    <rule id="11">Implement proper SEO with metadata exports in each page</rule>
-    <rule id="12">Use Tailwind CSS for styling with consistent utility classes throughout the application</rule>
-    <rule id="13">Implement proper form validation on the client side</rule>
-    <rule id="14">Access configuration values by reading config.json via a shared helper (do not use environment variables)</rule>
-    <rule id="15">Write all frontend code in JavaScript, not TypeScript</rule>
-    <rule id="16">Create reusable React components for common UI elements (navbar, sidebar, footer, buttons, modals)</rule>
-    <rule id="17">Store reusable components in a dedicated /components directory with clear organization</rule>
-    <rule id="18">DO NOT USE CLASS COMPONENTS - only use functional components with hooks</rule>
-  </frontend_nextjs_react>
+<allowedTechnologies>
+    <backend>FastAPI</backend>
+    <frontend>Next.js (App Router)</frontend>
+    <database>MySQL with SQLAlchemy ORM</database>
+</allowedTechnologies>
 
-  <ui_ux_design>
-    <rule id="19">Create modern, clean, and professional UI design using Tailwind CSS with clear visual hierarchy</rule>
-    <rule id="20">Establish strong typography hierarchy using consistent heading levels (h1-h6) with appropriate font sizes, weights, and spacing</rule>
-    <rule id="21">Maintain consistent spacing using Tailwind's spacing scale throughout all components and layouts</rule>
-    <rule id="22">Ensure accessible color contrast ratios (WCAG AA compliant) for all text and interactive elements</rule>
-    <rule id="23">Use semantic HTML5 elements to reinforce content structure and improve accessibility</rule>
-    <rule id="24">Implement responsive design that works seamlessly across all device sizes (mobile, tablet, desktop)</rule>
-    <rule id="25">Avoid using emojis in professional interface elements</rule>
-    <rule id="26">Include high-quality, optimized images where applicable to enhance visual appeal without compromising performance</rule>
-  </ui_ux_design>
+<requiredLibraries>
+    <backend>
+        <library purpose="Web Framework">fastapi</library>
+        <library purpose="ASGI Server">uvicorn</library>
+        <library purpose="Database ORM">sqlalchemy</library>
+        <library purpose="MySQL Database Driver">pymysql</library>
+        <library purpose="Database Migrations">alembic</library>
+        <library purpose="HTTP Testing">requests</library>
+        <library purpose="Configuration Management">json</library>
+        <library purpose="Error Logging">logging</library>
+        <library purpose="Password Hashing">bcrypt</library>
+    </backend>
+    <frontend>
+        <library purpose="React Framework">next</library>
+        <library purpose="React Library">react</library>
+        <library purpose="React DOM">react-dom</library>
+        <library purpose="HTTP Client">axios</library>
+        <library purpose="TypeScript">typescript</library>
+        <library purpose="CSS Framework">tailwindcss</library>
+    </frontend>
+</requiredLibraries>
 
-  <backend_fastapi>
-    <rule id="27">Use Pydantic models for request/response validation and serialization</rule>
-    <rule id="28">Implement proper error handling with HTTPException and custom exception handlers</rule>
-    <rule id="29">Use dependency injection for database connections, authentication, and shared logic</rule>
-    <rule id="30">Organize routes using APIRouter for modular endpoint management</rule>
-    <rule id="31">Structure backend with separate routers for each feature/domain (e.g., /routers/users.py, /routers/posts.py)</rule>
-    <rule id="32">Implement proper CORS configuration to allow frontend origin</rule>
-    <rule id="33">Use async/await patterns for I/O operations (database, external APIs)</rule>
-    <rule id="34">Implement proper logging for debugging and monitoring</rule>
-    <rule id="35">Load all sensitive configuration values (database URL, API keys, secrets) from config.json</rule>
-    <rule id="36">Use MySQL as the primary database engine</rule>
-    <rule id="37">Implement proper authentication and authorization (JWT, OAuth2, etc.)</rule>
-    <rule id="38">Document API endpoints with OpenAPI/Swagger automatic documentation</rule>
-    <rule id="39">Create a health check endpoint (e.g., /health or /api/health) that returns status, timestamp, and verifies database connectivity</rule>
-    <rule id="40">DO NOT USE OOP - avoid creating classes for business logic; use pure functions and utility modules instead</rule>
-    <rule id="41">Keep backend code simple and procedural - use functions that take inputs and return outputs</rule>
-  </backend_fastapi>
+<rules>
+    <rule id="2">
+        <description>Each feature or API endpoint group must be implemented as its own FastAPI Router.</description>
+        <example structure="routers/&lt;feature&gt;.py"/>
+    </rule>
 
-  <api_communication>
-    <rule id="42">Use RESTful API design principles with proper HTTP methods (GET, POST, PUT, DELETE)</rule>
-    <rule id="43">Implement proper status codes (200, 201, 400, 401, 404, 500, etc.)</rule>
-    <rule id="44">Use consistent JSON response format with proper error messages</rule>
-    <rule id="45">Implement API versioning (e.g., /api/v1/) for backward compatibility</rule>
-    <rule id="46">Use fetch or axios in frontend for API calls, wrapped in try-catch blocks</rule>
-    <rule id="47">Implement request/response interceptors for authentication tokens</rule>
-    <rule id="48">Handle rate limiting and implement request throttling when necessary</rule>
-  </api_communication>
+    <rule id="3">
+        <description>The FastAPI application entry point file MUST be named app.py (not main.py). This file should contain the FastAPI app instance, middleware configuration, router includes, and startup/shutdown event handlers.</description>
+        <subrule id="3.1">
+            <description>MUST use lifespan event handlers instead of the deprecated on_event method. The on_event method in FastAPI is deprecated. Use lifespan event handlers with async context managers instead. Implement startup and shutdown logic using the lifespan parameter in the FastAPI constructor with an async generator function that yields control after startup and handles cleanup on shutdown.</description>
+        </subrule>
+    </rule>
 
-  <security>
-    <rule id="49">Never expose sensitive data or API keys in frontend code</rule>
-    <rule id="50">Implement HTTPS in production environments</rule>
-    <rule id="51">Sanitize user inputs on both frontend and backend</rule>
-    <rule id="52">Use prepared statements or ORM to prevent SQL injection</rule>
-    <rule id="53">Implement CSRF protection for state-changing operations</rule>
-    <rule id="54">Set secure HTTP headers (Content-Security-Policy, X-Frame-Options, etc.)</rule>
-    <rule id="55">Implement proper password hashing (bcrypt, argon2) for user credentials</rule>
-    <rule id="56">Use secure session management and token expiration</rule>
-  </security>
+    <rule id="5">
+        <description>Use MySQL database with SQLAlchemy ORM; implement a SQLAlchemy engine and session management in db_utils.py that creates database sessions per request via FastAPI dependency injection. Use SQLAlchemy models to define database schema and relationships.</description>
+    </rule>
 
-  <database>
-    <rule id="57">Use MySQL as the primary database system</rule>
-    <rule id="58">Use SQLAlchemy (latest version) as the ORM with async support (e.g., sqlalchemy.ext.asyncio)</rule>
-    <rule id="59">Use aiomysql or asyncmy as the async MySQL driver</rule>
-    <rule id="60">Implement database migrations using Alembic (latest version)</rule>
-    <rule id="61">Store database connection settings (host, port, user, password, name) in config.json</rule>
-    <rule id="62">Implement connection pooling for efficient MySQL performance</rule>
-    <rule id="63">Implement proper indexing for optimized query performance</rule>
-    <rule id="64">Never expose raw database errors to the client</rule>
-    <rule id="65">Separate database logic from business logic and API route handlers</rule>
-    <rule id="66">Write database utility functions instead of database classes - use simple functions for queries and updates</rule>
-  </database>
+    <rule id="6">
+        <description>Auto-reload dev server on code changes: use uvicorn with --reload flag in development mode. Enable FastAPI's automatic documentation at /docs and /redoc endpoints.</description>
+    </rule>
 
-  <performance>
-    <rule id="67">Implement caching strategies (Redis, in-memory) for frequently accessed data</rule>
-    <rule id="68">Use pagination for large data sets in API responses</rule>
-    <rule id="69">Implement lazy loading for components and images in frontend</rule>
-    <rule id="70">Optimize database queries to avoid N+1 problems</rule>
-    <rule id="71">Use Next.js static generation where possible for better performance</rule>
-    <rule id="72">Implement proper code splitting in frontend bundle</rule>
-  </performance>
+    <rule id="7">
+        <description>Ship a lightweight health-check endpoint /health that returns { "status": "ok", "timestamp": "<iso8601>" } and runs SELECT 1 against the pooled DB.</description>
+    </rule>
 
-  <code_quality_and_simplicity>
-    <rule id="73">CRITICAL: DO NOT USE OBJECT-ORIENTED PROGRAMMING (OOP) - avoid creating classes for business logic, services, or utilities</rule>
-    <rule id="74">Write procedural, functional code that is simple and easy to understand</rule>
-    <rule id="75">Use pure functions wherever possible - functions should have clear inputs and outputs without side effects</rule>
-    <rule id="76">Keep functions small and focused on single responsibility (max 20-30 lines per function)</rule>
-    <rule id="77">Use descriptive function names that clearly indicate their purpose (verb-noun format: get_user, create_post, validate_email)</rule>
-    <rule id="78">Include docstrings/comments for all functions explaining purpose, parameters, return values, and any side effects</rule>
-    <rule id="79">Avoid deep nesting - use early returns and guard clauses to flatten code structure (max 2-3 levels of indentation)</rule>
-    <rule id="80">Use meaningful variable names that describe their purpose, avoiding single-letter names except for simple iterators</rule>
-    <rule id="81">Follow consistent naming conventions (camelCase for JavaScript, snake_case for Python)</rule>
-    <rule id="82">Use ESLint and Prettier for frontend code formatting</rule>
-    <rule id="83">Use Black and isort for backend Python code formatting</rule>
-    <rule id="84">Follow PEP 8 style guidelines for Python code</rule>
-    <rule id="85">Keep dependencies up to date - always use the latest stable versions of Python libraries</rule>
-    <rule id="86">Avoid global variables - use function parameters and return values to pass data between functions</rule>
-    <rule id="87">Separate concerns clearly - database logic, business logic, and presentation logic should be in different modules/files</rule>
-    <rule id="88">Organize code in simple utility modules with related functions grouped together (e.g., db_utils.py, auth_utils.py, validation_utils.py)</rule>
-    <rule id="89">Keep code readable and maintainable - prioritize clarity over cleverness</rule>
-    <rule id="90">Write self-documenting code where the logic is clear from variable and function names alone</rule>
-  </code_quality_and_simplicity>
+    <rule id="8">
+        <description>Store all sensitive secrets (SECRET_KEY, DB_URI, etc.) in a config.json file located in the backend folder; load it at startup using Python's json module.</description>
+        <subrule id="8.1">
+            <description>MUST automatically create a config.json file in the backend folder if it doesn't exist. The config.json file MUST be populated with placeholder values that the developer can replace with their actual configuration values. This is a mandatory requirement - the config.json file must be created and filled with placeholder data during project setup.</description>
+        </subrule>
+        <subrule id="8.2">
+            <description>MUST include all necessary configuration keys with clear placeholder values. The JSON structure should be organized and include keys like "SECRET_KEY", "DB_URI", etc. with placeholder values. For example: {"SECRET_KEY": "your-secret-key-here", "DB_URI": "mysql://user:password@localhost:3306/dbname", ...}. All required configuration keys must be present in the config.json file with placeholder data.</description>
+        </subrule>
+    </rule>
 
-  <development_workflow>
-    <rule id="91">Include requirements.txt or pyproject.toml with all Python dependencies pinned to the latest stable versions</rule>
-    <rule id="92">Include package.json for JavaScript dependencies</rule>
-    <rule id="93">Provide clear setup instructions in README.md for both frontend and backend, including how to configure config.json and MySQL</rule>
-    <rule id="94">Include .gitignore files to exclude node_modules, venv, __pycache__, config.json, and build artifacts</rule>
-    <rule id="95">Enable hot-reload for development: Next.js dev server auto-reloads on changes, use uvicorn --reload for FastAPI</rule>
-  </development_workflow>
-</nextjs_fastapi_development_rules>
+    <rule id="9">
+        <description>Use Alembic (SQLAlchemy's migration tool) for database migrations. Store migration files in alembic/versions/ folder. Each migration should be auto-generated from SQLAlchemy model changes and include both upgrade and downgrade functions.</description>
+        <subrule id="9.1">
+            <description>All database migrations and initializations MUST be performed automatically on application startup. Implement a startup event handler in the FastAPI application that runs database migrations/initializations before the application becomes ready to serve requests. This ensures the database schema is always up-to-date when the application starts.</description>
+        </subrule>
+        <subrule id="9.2">
+            <description>The startup migration handler should first attempt to use Alembic migrations if Alembic is configured (alembic.ini exists). If Alembic is not configured or not available, fall back to creating all tables directly using SQLAlchemy's Base.metadata.create_all() method. This ensures the database is initialized even without Alembic setup.</description>
+        </subrule>
+        <subrule id="9.3">
+            <description>All migration errors must be logged using the error logging system (rule 16). If migrations fail, the application should log the error and attempt fallback initialization. Critical migration failures that prevent database initialization should prevent the application from starting.</description>
+        </subrule>
+    </rule>
+
+    <rule id="10">
+        <description>Testing Requirements: For each API endpoint, create simple corresponding tests using placeholder values. Tests should be straightforward and focus on basic functionality - for example, if an endpoint is created for signup, the test should simply test signup using placeholder values like "test@example.com" and "password123". Keep tests simple and avoid complex test scenarios.</description>
+        <subrule id="10.1">
+            <description>Create test files in a tests/ directory located in the project root directory (same level as backend/ and frontend/ folders), mirroring the router structure (e.g., tests/test_&lt;feature&gt;.py for routers/&lt;feature&gt;.py)</description>
+        </subrule>
+        <subrule id="10.2">
+            <description>Tests must be standalone and use the requests library to make HTTP requests to the running server. Do NOT use FastAPI's TestClient. Tests should make actual HTTP requests to a running server instance. For each endpoint, create a basic test that uses placeholder data (e.g., "test@example.com", "testuser", "password123", etc.) to verify the endpoint works correctly. The server must be running separately before executing tests.</description>
+        </subrule>
+        <subrule id="10.3">
+            <description>Test each endpoint's HTTP methods (GET, POST, PUT, DELETE, etc.) with simple placeholder request bodies, query parameters, and path parameters using the requests library</description>
+        </subrule>
+        <subrule id="10.4">
+            <description>Verify basic response status codes and that the endpoint returns expected data structure</description>
+        </subrule>
+        <subrule id="10.5">
+            <description>Tests should be completely independent and standalone - they should not import or depend on FastAPI application code. Tests should only use the requests library to make HTTP requests to the API server running on a specified base URL (e.g., http://localhost:8000)</description>
+        </subrule>
+    </rule>
+
+    <rule id="11">
+        <description>Code Quality and Function Design: Write clean, functional, and easy-to-understand code without OOP</description>
+        <subrule id="11.1">
+            <description>Use pure functions where possible - functions should have clear inputs and outputs without side effects</description>
+        </subrule>
+        <subrule id="11.2">
+            <description>Keep functions small and focused on a single responsibility (max 20-30 lines per function)</description>
+        </subrule>
+        <subrule id="11.3">
+            <description>Use descriptive function names that clearly indicate their purpose (verb-noun format)</description>
+        </subrule>
+        <subrule id="11.4">
+            <description>Include docstrings for all functions explaining purpose, parameters, return values, and any side effects</description>
+        </subrule>
+        <subrule id="11.5">
+            <description>Avoid deep nesting - use early returns and guard clauses to flatten code structure</description>
+        </subrule>
+        <subrule id="11.6">
+            <description>Use meaningful variable names that describe their purpose, avoiding single-letter names except for simple iterators</description>
+        </subrule>
+        <subrule id="11.7">
+            <description>Follow PEP 8 style guidelines for consistent formatting and naming conventions</description>
+        </subrule>
+        <subrule id="11.8">
+            <description>Use type hints for function parameters and return values to improve readability</description>
+        </subrule>
+        <subrule id="11.9">
+            <description>Structure code with clear separation of concerns - database logic and business logic should be separated</description>
+        </subrule>
+        <subrule id="11.10">
+            <description>Avoid global variables - use function parameters and return values to pass data between functions</description>
+        </subrule>
+    </rule>
+
+    <rule id="12">
+        <description>Project Structure: The root directory MUST contain three folders: "backend", "frontend", and "tests". All FastAPI backend code must be placed in the backend/ folder, all Next.js frontend code must be placed in the frontend/ folder, and all standalone tests must be placed in the tests/ folder. Each folder should be a self-contained project with its own dependencies and configuration files (where applicable).</description>
+    </rule>
+
+    <rule id="12.1">
+        <description>Frontend Initialization: MUST use npx create-next-app@latest to initialize the Next.js frontend application instead of manually creating frontend files. This ensures the frontend is set up with the latest Next.js configuration, dependencies, and project structure.</description>
+        <subrule id="12.1.1">
+            <description>When setting up the frontend, MUST run the command: npx create-next-app@latest frontend (or npx create-next-app@latest . if creating in the frontend directory). Use the --yes flag or non-interactive flags to accept default configurations automatically. Configure the app to use TypeScript, Tailwind CSS, App Router, and other recommended settings.</description>
+        </subrule>
+        <subrule id="12.1.2">
+            <description>After running create-next-app, MUST run npm install in the frontend directory to ensure all dependencies are installed. This should be done automatically as part of the frontend setup process.</description>
+        </subrule>
+        <subrule id="12.1.3">
+            <description>Do NOT manually create Next.js configuration files, package.json, or other frontend boilerplate files. Let create-next-app generate the complete project structure with all necessary files and configurations.</description>
+        </subrule>
+        <subrule id="12.1.4">
+            <description>After create-next-app completes, only modify or add files as needed for the specific project requirements (e.g., API client functions, components, pages, environment configuration). Do not recreate files that create-next-app has already generated.</description>
+        </subrule>
+    </rule>
+
+    <rule id="13">
+        <description>For each endpoint created, add comprehensive comments that explain what it does and how it works. Comments should include: the endpoint's purpose, expected request parameters/body, response format, any business logic or validation steps, and error conditions. Place comments directly above the endpoint function definition.</description>
+    </rule>
+
+    <rule id="14">
+        <description>Keep the code simple and avoid using OOP (Object-Oriented Programming). Code should be easy to understand for a junior developer. Use functional programming approaches with simple functions, avoid complex design patterns, and prioritize readability and straightforward logic over clever or advanced techniques.</description>
+    </rule>
+
+    <rule id="15">
+        <description>API endpoints must cover edge cases and include security features. For example, when creating a signup endpoint, implement password strength validation (minimum length, complexity requirements), duplicate email/username checks, input sanitization, and proper error handling. All endpoints should validate inputs, handle edge cases (empty strings, null values, invalid formats, etc.), and return appropriate error messages with proper HTTP status codes.</description>
+        <subrule id="15.1">
+            <description>Validate all user inputs: check for required fields, data types, format validation (emails, phone numbers, etc.), and length constraints</description>
+        </subrule>
+        <subrule id="15.2">
+            <description>Implement security checks: password strength validation, duplicate record checks (emails, usernames), SQL injection prevention through parameterized queries, and input sanitization</description>
+        </subrule>
+        <subrule id="15.3">
+            <description>Handle edge cases: empty strings, null/None values, invalid data formats, out-of-range values, and malformed requests</description>
+        </subrule>
+        <subrule id="15.4">
+            <description>Return appropriate HTTP status codes and clear error messages for validation failures, security violations, and edge case scenarios</description>
+        </subrule>
+    </rule>
+
+    <rule id="16">
+        <description>All errors in the application must be logged to an errors file located in the backend folder. Implement comprehensive error logging that captures all exceptions, errors, and failures that occur during application execution.</description>
+        <subrule id="16.1">
+            <description>Create an errors file (e.g., errors.log or errors.txt) in the backend directory. This file must be created automatically if it doesn't exist when the application starts.</description>
+        </subrule>
+        <subrule id="16.2">
+            <description>Log all errors with detailed information including: timestamp, error type, error message, stack trace, request details (if applicable), and any relevant context. Use a consistent format for all error log entries.</description>
+        </subrule>
+        <subrule id="16.3">
+            <description>Implement error logging in exception handlers, try-except blocks, and FastAPI exception handlers. All unhandled exceptions and caught errors must be written to the errors file.</description>
+        </subrule>
+        <subrule id="16.4">
+            <description>Use Python's logging module or a simple file writing mechanism to append errors to the errors file. Ensure that error logging does not block the main application flow and handles file writing errors gracefully.</description>
+        </subrule>
+    </rule>
+
+    <rule id="17">
+        <description>All Python libraries and dependencies MUST use the latest available versions. When creating requirements.txt or any dependency file, DO NOT include version numbers or version constraints. List only the package names without any version specifications (e.g., "fastapi" not "fastapi==0.104.1" or "fastapi>=0.100.0"). This ensures that pip install will always install the latest version of each package.</description>
+        <subrule id="17.1">
+            <description>The requirements.txt file must contain only package names, one per line, without any version numbers, version ranges, or version constraints. For example: "fastapi", "uvicorn", "sqlalchemy", "pymysql", "alembic", "requests" - each on its own line without any version specifications.</description>
+        </subrule>
+        <subrule id="17.2">
+            <description>When installing dependencies, always use the latest versions available from PyPI. Do not pin to specific versions or use version ranges that might prevent installation of the latest version.</description>
+        </subrule>
+        <subrule id="17.3">
+            <description>If a requirements.txt file already exists with version numbers, it must be updated to remove all version specifications before use. The file should only contain package names.</description>
+        </subrule>
+    </rule>
+
+    <rule id="18">
+        <description>Next.js Frontend Structure: Use Next.js App Router (app directory) for routing. Each feature or page group should be organized in its own route folder within the app directory. Create reusable components in a components/ directory, and shared utilities in a lib/ or utils/ directory within the frontend folder.</description>
+        <subrule id="18.1">
+            <description>Use the App Router structure: app/&lt;route&gt;/page.tsx for pages, app/&lt;route&gt;/layout.tsx for layouts, and app/&lt;route&gt;/loading.tsx for loading states</description>
+        </subrule>
+        <subrule id="18.2">
+            <description>Create feature-based component organization: components/&lt;feature&gt;/&lt;ComponentName&gt;.tsx. Keep components small and focused on a single responsibility</description>
+        </subrule>
+        <subrule id="18.3">
+            <description>Store API client functions and utilities in lib/ or utils/ directories. Create API client functions that correspond to backend endpoints, using axios or fetch for HTTP requests</description>
+        </subrule>
+    </rule>
+
+    <rule id="19">
+        <description>Frontend Code Quality: Write clean, functional, and easy-to-understand code without OOP. Follow the same principles as backend code quality (rule 11) but adapted for TypeScript/React.</description>
+        <subrule id="19.1">
+            <description>Use functional components with hooks. Avoid class components. Keep components small and focused (max 50-100 lines per component)</description>
+        </subrule>
+        <subrule id="19.2">
+            <description>Use TypeScript for all files. Define clear interfaces/types for props, API responses, and data structures. Use type hints consistently</description>
+        </subrule>
+        <subrule id="19.3">
+            <description>Extract reusable logic into custom hooks (use&lt;Feature&gt;.ts) and utility functions. Keep components focused on rendering</description>
+        </subrule>
+        <subrule id="19.4">
+            <description>Use descriptive function and component names (PascalCase for components, camelCase for functions). Include JSDoc comments for complex functions</description>
+        </subrule>
+        <subrule id="19.5">
+            <description>Avoid deep nesting - use early returns, conditional rendering, and guard clauses to flatten component structure</description>
+        </subrule>
+        <subrule id="19.6">
+            <description>Follow React and TypeScript best practices. Use meaningful variable names, avoid single-letter names except for simple iterators</description>
+        </subrule>
+        <subrule id="19.7">
+            <description>Structure code with clear separation of concerns - API calls, business logic, and UI rendering should be separated</description>
+        </subrule>
+        <subrule id="19.8">
+            <description>Avoid global state when possible - use React Context, local state, or props. Keep state management simple and straightforward</description>
+        </subrule>
+    </rule>
+
+    <rule id="20">
+        <description>Frontend API Integration: Create API client functions in lib/api/ or utils/api/ that correspond to backend endpoints. Use axios or fetch for HTTP requests. All API calls should handle errors gracefully and return consistent response formats.</description>
+        <subrule id="20.1">
+            <description>Create API client functions that mirror backend router structure. For example, if backend has routers/auth.py, create lib/api/auth.ts with corresponding functions</description>
+        </subrule>
+        <subrule id="20.2">
+            <description>Use environment variables for API base URL (NEXT_PUBLIC_API_URL). Store configuration in .env.local file in the frontend folder</description>
+        </subrule>
+        <subrule id="20.3">
+            <description>Implement consistent error handling for all API calls. Handle network errors, validation errors, and server errors appropriately</description>
+        </subrule>
+        <subrule id="20.4">
+            <description>Include request/response interceptors for authentication tokens, error handling, and request logging if needed</description>
+        </subrule>
+    </rule>
+
+    <rule id="21">
+        <description>Frontend Input Validation and Security: Implement client-side validation that complements backend validation. Validate all user inputs before sending to API, handle edge cases, and provide clear error messages to users.</description>
+        <subrule id="21.1">
+            <description>Validate all form inputs: check for required fields, data types, format validation (emails, phone numbers, etc.), and length constraints before submission</description>
+        </subrule>
+        <subrule id="21.2">
+            <description>Implement password strength indicators, duplicate email/username checks (client-side), and input sanitization</description>
+        </subrule>
+        <subrule id="21.3">
+            <description>Handle edge cases: empty strings, null/undefined values, invalid data formats, and malformed user input</description>
+        </subrule>
+        <subrule id="21.4">
+            <description>Display clear, user-friendly error messages for validation failures. Show errors inline with form fields when possible</description>
+        </subrule>
+        <subrule id="21.5">
+            <description>Never trust client-side validation alone - always validate on the backend as well. Client-side validation is for user experience, not security</description>
+        </subrule>
+    </rule>
+
+    <rule id="22">
+        <description>Frontend Error Handling and Logging: Implement comprehensive error handling for API calls, component errors, and user interactions. Log errors to console in development and to an error tracking service in production if needed.</description>
+        <subrule id="22.1">
+            <description>Use try-catch blocks for all async operations (API calls, data fetching). Handle errors gracefully with user-friendly messages</description>
+        </subrule>
+        <subrule id="22.2">
+            <description>Implement error boundaries for React components to catch and handle component errors. Create a global error boundary component</description>
+        </subrule>
+        <subrule id="22.3">
+            <description>Log errors with detailed information: timestamp, error type, error message, component/function name, and relevant context. Use console.error in development</description>
+        </subrule>
+        <subrule id="22.4">
+            <description>Display user-friendly error messages. Never expose technical error details or stack traces to end users in production</description>
+        </subrule>
+    </rule>
+
+    <rule id="23">
+        <description>Frontend Testing: Create tests for components, API client functions, and user interactions. Use Jest and React Testing Library for component testing. Keep tests simple and focused on basic functionality.</description>
+        <subrule id="23.1">
+            <description>Create test files in a __tests__/ or tests/ directory, mirroring the component structure (e.g., __tests__/components/&lt;ComponentName&gt;.test.tsx)</description>
+        </subrule>
+        <subrule id="23.2">
+            <description>Test components with placeholder data and simple scenarios. Focus on rendering, user interactions, and basic functionality</description>
+        </subrule>
+        <subrule id="23.3">
+            <description>Test API client functions with mock data. Use placeholder values (e.g., "test@example.com", "testuser", "password123") for test scenarios</description>
+        </subrule>
+        <subrule id="23.4">
+            <description>Verify that components handle loading states, error states, and empty states correctly</description>
+        </subrule>
+        <subrule id="23.5">
+            <description>Keep tests simple and avoid complex test scenarios. Focus on basic functionality and user interactions</description>
+        </subrule>
+    </rule>
+
+    <rule id="24">
+        <description>Frontend Configuration: Store all configuration values (API URLs, feature flags, etc.) in environment variables using .env.local file in the frontend folder. Automatically create .env.local with placeholder values if it doesn't exist.</description>
+        <subrule id="24.1">
+            <description>MUST automatically create a .env.local file in the frontend folder if it doesn't exist. Populate it with placeholder values that developers can replace</description>
+        </subrule>
+        <subrule id="24.2">
+            <description>Include all necessary configuration keys: NEXT_PUBLIC_API_URL, NEXT_PUBLIC_APP_NAME, etc. Use NEXT_PUBLIC_ prefix for variables that need to be exposed to the browser</description>
+        </subrule>
+        <subrule id="24.3">
+            <description>Never commit .env.local to version control. Include .env.example or .env.local.example with placeholder values as a template</description>
+        </subrule>
+    </rule>
+
+    <rule id="25">
+        <description>Frontend Comments and Documentation: For each component, page, and API client function, add comprehensive comments explaining purpose, props/parameters, return values, and usage. Comments should be clear and helpful for junior developers.</description>
+        <subrule id="25.1">
+            <description>Add JSDoc comments for all components explaining: purpose, props (with types), usage examples, and any special behavior</description>
+        </subrule>
+        <subrule id="25.2">
+            <description>Add comments for API client functions explaining: endpoint URL, request parameters, response format, error handling, and usage examples</description>
+        </subrule>
+        <subrule id="25.3">
+            <description>Add inline comments for complex logic, business rules, and non-obvious code sections</description>
+        </subrule>
+    </rule>
+
+    <rule id="26">
+        <description>Frontend Dependencies: All npm packages MUST use the latest available versions. When creating package.json, DO NOT include version numbers or version constraints. Use "latest" tag or no version specification to ensure latest versions are installed.</description>
+        <subrule id="26.1">
+            <description>The package.json dependencies should use "latest" tag or no version specification. For example: "next": "latest" or "next": "*" instead of "next": "^14.0.0"</description>
+        </subrule>
+        <subrule id="26.2">
+            <description>When installing dependencies, always use the latest versions available from npm. Do not pin to specific versions or use version ranges that might prevent installation of the latest version</description>
+        </subrule>
+        <subrule id="26.3">
+            <description>If a package.json file already exists with version numbers, it should be updated to use "latest" or "*" for all dependencies to ensure latest versions are installed</description>
+        </subrule>
+    </rule>
+
+    <rule id="27">
+        <description>Frontend-Backend Integration: Ensure frontend API calls match backend endpoint structure. Use consistent naming conventions between frontend API client functions and backend routers. Handle CORS, authentication, and error responses consistently.</description>
+        <subrule id="27.1">
+            <description>Frontend API client function names should correspond to backend endpoint names. For example, backend POST /api/auth/signup should have frontend function signupUser() or createSignupRequest()</description>
+        </subrule>
+        <subrule id="27.2">
+            <description>Use consistent request/response data structures between frontend and backend. Define shared TypeScript interfaces that match backend Pydantic models</description>
+        </subrule>
+        <subrule id="27.3">
+            <description>Handle authentication tokens consistently. Store tokens securely (httpOnly cookies or secure storage) and include them in API requests</description>
+        </subrule>
+        <subrule id="27.4">
+            <description>Ensure CORS is properly configured on the backend to allow frontend requests. Use environment variables for allowed origins</description>
+        </subrule>
+    </rule>
+
+    <rule id="28">
+        <description>Cross-Stack Change Coordination: Whenever making changes to backend or frontend code, MUST check the corresponding side (backend/frontend) for any required changes. This ensures consistency and prevents integration issues.</description>
+        <subrule id="28.1">
+            <description>When adding, modifying, or removing a backend API endpoint, check if corresponding frontend API client functions, components, or pages need to be updated. Update frontend code to match new endpoint structure, request/response formats, or error handling</description>
+        </subrule>
+        <subrule id="28.2">
+            <description>When adding, modifying, or removing a frontend feature that requires backend support, check if corresponding backend endpoints, models, or validation logic need to be created or updated. Ensure backend can handle the frontend's requirements</description>
+        </subrule>
+        <subrule id="28.3">
+            <description>When changing data models, request/response structures, or validation rules in either side, update the corresponding side to match. For example, if backend adds a new required field, update frontend forms and validation. If frontend requires a new field, add it to backend models and endpoints</description>
+        </subrule>
+        <subrule id="28.4">
+            <description>When changing authentication or authorization logic, ensure both sides are updated consistently. If backend changes token format or auth flow, update frontend token handling. If frontend changes auth UI flow, ensure backend supports it</description>
+        </subrule>
+        <subrule id="28.5">
+            <description>When adding new features, always implement both backend and frontend parts together. Do not create backend endpoints without corresponding frontend integration, and do not create frontend features without backend support</description>
+        </subrule>
+        <subrule id="28.6">
+            <description>Before finalizing any change, verify that the corresponding side has been checked and updated if necessary. This includes checking API client functions, TypeScript interfaces, form validations, error handling, and test files</description>
+        </subrule>
+    </rule>
+
+    <rule id="29">
+        <description>Development Startup Script: MUST create a Windows CMD script (start.bat or start.cmd) in the project root that starts both the backend and frontend servers simultaneously. This script should launch both servers in separate windows or processes so developers can easily start the entire application stack with a single command.</description>
+        <subrule id="29.1">
+            <description>The startup script must be located in the project root directory and named start.bat or start.cmd. This makes it easily accessible and discoverable for developers.</description>
+        </subrule>
+        <subrule id="29.2">
+            <description>The script must start the backend server (FastAPI with uvicorn) from the backend folder. Use appropriate commands to navigate to the backend directory and start the server with uvicorn (e.g., uvicorn app:app --reload --host 0.0.0.0 --port 8000).</description>
+        </subrule>
+        <subrule id="29.3">
+            <description>The script must start the frontend server (Next.js) from the frontend folder. Use appropriate commands to navigate to the frontend directory and start the development server (e.g., npm run dev or next dev).</description>
+        </subrule>
+        <subrule id="29.4">
+            <description>Both servers should be started in separate windows or processes so that their output logs are visible and they can run independently. Use Windows CMD commands like "start" to launch each server in a new window, or use background processes if preferred.</description>
+        </subrule>
+        <subrule id="29.5">
+            <description>The script should handle common scenarios: check if dependencies are installed, provide clear error messages if servers fail to start, and ensure proper directory navigation before starting each server.</description>
+        </subrule>
+    </rule>
+</rules>
