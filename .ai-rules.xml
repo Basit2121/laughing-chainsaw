@@ -6,10 +6,10 @@
 </rules>
 
 <allowedTechnologies>
-    <backend>Flask</backend>
+    <backend>FastAPI</backend>
     <css>CSS + Tailwind CSS</css>
     <frontend>JQuery</frontend>
-    <database>sqlite3 (stdlib only)</database>
+    <database>MySQL via ORM (no raw driver usage)</database>
 </allowedTechnologies>
 
 <rules>
@@ -45,8 +45,8 @@
     </rule>
 
     <rule id="2">
-        <description>Each page or feature must be implemented as its own Flask Blueprint with its own templates and static sub-folder.</description>
-        <example structure="blueprints/&lt;feature&gt;/__init__.py"/>
+        <description>Each page or feature must be implemented as its own FastAPI router (using APIRouter) with its own templates and static sub-folder.</description>
+        <example structure="routers/&lt;feature&gt;.py"/>
     </rule>
 
     <rule id="3">
@@ -58,19 +58,19 @@
     </rule>
 
     <rule id="5">
-        <description>Use sqlite3 stdlib only; implement a lightweight connection pool in db_utils.py that opens/closes connections per request via Flask's teardown_appcontext.</description>
+        <description>Use MySQL exclusively through an ORM (no direct driver calls); implement a session/connection management layer in db_utils.py that provides a per-request ORM session via FastAPI dependencies or middleware, relying on the ORM/driver for efficient connection pooling.</description>
     </rule>
 
     <rule id="6">
-        <description>Auto-reload dev server on template/static changes: set app.config['TEMPLATES_AUTO_RELOAD'] = True and use Flask-DebugToolbar in development only.</description>
+        <description>Auto-reload the FastAPI dev server on code/template/static changes by running Uvicorn with the --reload flag; configure the Jinja2 environment (if used) with auto_reload = True in development only.</description>
     </rule>
 
     <rule id="7">
-        <description>Ship a lightweight health-check endpoint /health that returns { "status": "ok", "timestamp": "<iso8601>" } and runs SELECT 1 against the pooled DB.</description>
+        <description>Ship a lightweight health-check endpoint /health that returns { "status": "ok", "timestamp": "<iso8601>" } and performs a minimal ORM-based query (e.g., SELECT 1) against the pooled MySQL database.</description>
     </rule>
 
     <rule id="8">
-        <description>Store all sensitive secrets (FLASK_SECRET_KEY, DB_URI, etc.) in a config.json file located in the project root; load it at startup with json.load(). Never commit config.json to git; provide a sample config.example.json instead.</description>
+        <description>Store all sensitive secrets (APP_SECRET_KEY, DATABASE_URL, etc.) in a config.json file located in the project root; load it at startup with json.load(). Never commit config.json to git; provide a sample config.example.json instead.</description>
     </rule>
 
     <rule id="9">
@@ -78,31 +78,7 @@
     </rule>
 
     <rule id="10">
-        <description>Store database schema in schema.sql and implement a simple migration system in migrations/ folder. Each migration file should be numbered (001_initial.sql, 002_add_users.sql) and include both UP and DOWN statements.</description>
-    </rule>
-
-    <rule id="11">
-        <description>Environment Setup and Execution: Create a virtual environment setup and automated execution system</description>
-        <subrule id="11.1">
-            <description>Generate a requirements.txt file listing all Python dependencies including Flask and any other required packages</description>
-        </subrule>
-        <subrule id="11.2">
-            <description>Create a run.py script in the project root that automatically:
-                - Checks for and creates a virtual environment (venv) if it doesn't exist
-                - Activates the virtual environment
-                - Installs all requirements from requirements.txt
-                - Launches the Flask application with proper configuration
-            </description>
-        </subrule>
-        <subrule id="11.3">
-            <description>The run.py script should work cross-platform (Windows, macOS, Linux) and provide clear output about each step of the process</description>
-        </subrule>
-        <subrule id="11.4">
-            <description>Include .gitignore to exclude the virtual environment directory and other non-essential files from version control</description>
-        </subrule>
-        <subrule id="11.5">
-            <description>Ensure the run.py script sets appropriate environment variables for development mode (FLASK_ENV=development, FLASK_DEBUG=1)</description>
-        </subrule>
+        <description>Use the ORM's migration tooling (e.g., Alembic for SQLAlchemy) to manage the MySQL schema via Python migration scripts in a migrations/ folder. Each migration file should be numbered (001_initial.py, 002_add_users.py) and include both upgrade and downgrade routines.</description>
     </rule>
 
     <rule id="12">
@@ -137,5 +113,53 @@
         <subrule id="12.10">
             <description>Avoid global variables - use function parameters and return values to pass data between functions</description>
         </subrule>
+    </rule>
+
+    <rule id="13">
+        <description>Comment Formatting: All comments must be written only as multi-line ASCII box blocks with a top and bottom border of dashes and vertical bar-prefixed lines inside.</description>
+        <subrule id="13.1">
+            <description>Use the following structure for every comment block (adjusting inner text and width as needed, but preserving the surrounding box):</description>
+        </subrule>
+        <subrule id="13.2">
+            <description>
+                ---------------------------------------------------------------
+                |    comment here (adjust height and width as needed)         |
+                ---------------------------------------------------------------
+            </description>
+        </subrule>
+    </rule>
+
+    <rule id="14">
+        <description>Application Entry and Environment Management: Do not create virtual environments or separate runner scripts; the application must be started directly from a single app.py file in the project root.</description>
+        <subrule id="14.1">
+            <description>Do not create or manage virtual environments (venv, .env, etc.) in code or project scaffolding; environment creation and activation are assumed to be handled externally by the user or tooling.</description>
+        </subrule>
+        <subrule id="14.2">
+            <description>Do not create any separate files to run the app (such as run.py, manage.py, shell scripts, or batch files); the only entry point for the application should be an app.py file located at the root of the project.</description>
+        </subrule>
+        <subrule id="14.3">
+            <description>Ensure all setup and startup logic needed to run the application is contained within app.py (plus any imported modules), so running the app is as simple as invoking the Python interpreter on app.py.</description>
+        </subrule>
+    </rule>
+
+    <rule id="15">
+        <description>Error Logging: All unhandled errors and exceptions occurring in the application must be logged to an errors.log file at the project root.</description>
+        <subrule id="15.1">
+            <description>Configure a centralized logging setup (e.g., Python's logging module) that writes error-level logs and above to a file named errors.log in the project root.</description>
+        </subrule>
+        <subrule id="15.2">
+            <description>Register global exception handlers or middleware in FastAPI so that any unhandled exceptions are captured, logged (including timestamp, path, and traceback where possible), and then converted into a standardized error response.</description>
+        </subrule>
+        <subrule id="15.3">
+            <description>Do not scatter ad-hoc file writes to errors.log throughout the codebase; all error logging must go through the centralized logger configuration.</description>
+        </subrule>
+    </rule>
+
+    <rule id="16">
+        <description>Comment Blocks Before Routes and Functions: Every route (e.g., FastAPI path operation) and every function definition must have a multi-line ASCII box comment block immediately above it, following the formatting defined in rule 13.</description>
+    </rule>
+
+    <rule id="17">
+        <description>README Creation: Do not create any README files of any kind (e.g., README, README.md, README.txt) anywhere in the project, and do not suggest generating them in scaffolding or documentation.</description>
     </rule>
 </rules>
