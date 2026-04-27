@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rules>
     <rule id="1">
-        <description>Always load and follow ./.ai-rules.xml before any code generation step.</description>
+        <description>Always load and follow ai-rules.xml before any code generation step.</description>
     </rule>
 </rules>
 
@@ -9,7 +9,8 @@
     <backend>FastAPI</backend>
     <css>CSS + Tailwind CSS</css>
     <frontend>JQuery</frontend>
-    <database>MySQL via ORM (no raw driver usage)</database>
+    <database>MySQL via SQLAlchemy</database>
+    <pythonDependencies>uv (pyproject.toml, uv.lock)</pythonDependencies>
 </allowedTechnologies>
 
 <rules>
@@ -70,7 +71,7 @@
     </rule>
 
     <rule id="8">
-        <description>Store all sensitive secrets (APP_SECRET_KEY, DATABASE_URL, etc.) in a config.json file located in the project root; load it at startup with json.load(). Never commit config.json to git; provide a sample config.example.json instead.</description>
+        <description>Store all sensitive secrets (APP_SECRET_KEY, DATABASE_URL, etc.) in a config.json file located in the project root; load it at startup with json.load().</description>
     </rule>
 
     <rule id="9">
@@ -78,7 +79,7 @@
     </rule>
 
     <rule id="10">
-        <description>Use the ORM's migration tooling (e.g., Alembic for SQLAlchemy) to manage the MySQL schema via Python migration scripts in a migrations/ folder. Each migration file should be numbered (001_initial.py, 002_add_users.py) and include both upgrade and downgrade routines.</description>
+        <description>Use the ORM's migration tooling (e.g., Alembic for SQLAlchemy) to manage the MySQL schema via Python migration scripts in a migrations/ folder. Each migration file should be numbered (001_initial.py, 002_add_users.py) and include both upgrade and downgrade routines. The App Should auto run all migrations on startup if they are not already applied.</description>
     </rule>
 
     <rule id="12">
@@ -116,29 +117,15 @@
     </rule>
 
     <rule id="13">
-        <description>Comment Formatting: All comments must be written only as multi-line ASCII box blocks with a top and bottom border of dashes and vertical bar-prefixed lines inside.</description>
-        <subrule id="13.1">
-            <description>Use the following structure for every comment block (adjusting inner text and width as needed, but preserving the surrounding box):</description>
-        </subrule>
-        <subrule id="13.2">
-            <description>
-                ---------------------------------------------------------------
-                |    comment here (adjust height and width as needed)         |
-                ---------------------------------------------------------------
-            </description>
-        </subrule>
+        <description>Keep the comments minimal and only used when absolutely necessary.</description>
     </rule>
 
     <rule id="14">
-        <description>Application Entry and Environment Management: Do not create virtual environments or separate runner scripts; the application must be started directly from a single app.py file in the project root.</description>
-        <subrule id="14.1">
-            <description>Do not create or manage virtual environments (venv, .env, etc.) in code or project scaffolding; environment creation and activation are assumed to be handled externally by the user or tooling.</description>
-        </subrule>
         <subrule id="14.2">
             <description>Do not create any separate files to run the app (such as run.py, manage.py, shell scripts, or batch files); the only entry point for the application should be an app.py file located at the root of the project.</description>
         </subrule>
         <subrule id="14.3">
-            <description>Ensure all setup and startup logic needed to run the application is contained within app.py (plus any imported modules), so running the app is as simple as invoking the Python interpreter on app.py.</description>
+            <description>Ensure all setup and startup logic needed to run the application is contained within app.py (plus any imported modules), so running the app is as simple as python app.py or, when using uv per rule 18, uv run python app.py (or uv run with the equivalent module/uvicorn target).</description>
         </subrule>
     </rule>
 
@@ -154,12 +141,13 @@
             <description>Do not scatter ad-hoc file writes to errors.log throughout the codebase; all error logging must go through the centralized logger configuration.</description>
         </subrule>
     </rule>
-
     <rule id="16">
-        <description>Comment Blocks Before Routes and Functions: Every route (e.g., FastAPI path operation) and every function definition must have a multi-line ASCII box comment block immediately above it, following the formatting defined in rule 13.</description>
-    </rule>
-
-    <rule id="17">
         <description>README Creation: Do not create any README files of any kind (e.g., README, README.md, README.txt) anywhere in the project, and do not suggest generating them in scaffolding or documentation.</description>
+    </rule>
+    <rule id="17">
+        <description>Python dependency management: Use uv only. Declare dependencies in pyproject.toml; commit uv.lock when the project uses a lockfile. Prefer uv sync to install locked dependencies, uv add / uv remove to change dependencies, and uv run to execute Python commands and scripts (e.g., uv run uvicorn ...). Do not add or maintain requirements.txt, Pipfile, poetry.lock, or pip-tools compile workflows for this project unless explicitly migrating away from uv.</description>
+    </rule>
+    <rule id="18">
+        <description>Starlette and FastAPI Jinja2Templates.TemplateResponse must be called with (request, name, context) in that order: the Request first, the template file name second, and an optional context dict third. The older call pattern (name, then context including request) is invalid and makes the context dict the template name, which leads to Jinja2 errors such as TypeError: unhashable type: 'dict' when loading the template. TemplateResponse already adds request to the context; only pass additional keys in the context dict.</description>
     </rule>
 </rules>
