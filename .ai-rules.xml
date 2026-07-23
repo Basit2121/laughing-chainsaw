@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Personality>
 ---
 description: Ponytail, lazy senior dev mode. Always pick the simplest solution that works.
 globs:
@@ -34,8 +37,8 @@ Rules:
 - Mark deliberate simplifications that cut a real corner with a known ceiling (global lock, O(n²) scan, naive heuristic) with a `ponytail:` comment naming the ceiling and upgrade path.
 
 Not lazy about: understanding the problem (read it fully and trace the real flow before picking a rung, a small diff you don't understand is just laziness dressed up as efficiency), input validation at trust boundaries, error handling that prevents data loss, security, accessibility, the calibration real hardware needs (the platform is never the spec ideal, a clock drifts, a sensor reads off), anything explicitly requested. Lazy code without its check is unfinished: non-trivial logic leaves ONE runnable check behind, the smallest thing that fails if the logic breaks (an assert-based demo/self-check or one small test file; no frameworks, no fixtures). Trivial one-liners need no test.
+</Personality>
 
-<?xml version="1.0" encoding="UTF-8"?>
 <rules>
     <rule id="1">
         <description>Always load and follow ai-rules.xml before any code generation step.</description>
@@ -83,8 +86,13 @@ Not lazy about: understanding the problem (read it fully and trace the real flow
     </rule>
 
     <rule id="2">
-        <description>Each page or feature must be implemented as its own FastAPI router (using APIRouter) with its own templates and static sub-folder.</description>
+        <description>Each page or feature must be implemented as its own FastAPI router (using APIRouter) with its own templates and static sub-folder. Routers define HTTP paths, methods, and dependencies only; they delegate request handling to controller functions in controllers/. Keep routers/ flat; do not create subdirectories inside routers/.</description>
         <example structure="routers/&lt;feature&gt;.py"/>
+    </rule>
+
+    <rule id="19">
+        <description>Place request-handling logic in controllers/, not in routers/. Organize controllers/ by feature subdirectory (e.g., controllers/auth/, controllers/billing/, controllers/home/). Name controller files after the feature without repeating the directory prefix or suffix (e.g., controllers/billing/billing.py, not billing_controller.py). Shared helpers for a domain belong in the same subdirectory (e.g., controllers/auth/helpers.py). Static catalog or reference data for a feature may live alongside that feature (e.g., controllers/billing/contabo.py). All webhook handlers must live under webhooks/ at the project root (e.g., webhooks/paddle.py). Routers import controller and webhook functions and return their results without duplicating business logic.</description>
+        <example structure="controllers/&lt;feature&gt;/&lt;module&gt;.py"/>
     </rule>
 
     <rule id="3">
@@ -108,7 +116,7 @@ Not lazy about: understanding the problem (read it fully and trace the real flow
     </rule>
 
     <rule id="8">
-        <description>Store all sensitive secrets (APP_SECRET_KEY, DATABASE_URL, etc.) in a config.json file located in the project root; load it at startup with json.load().</description>
+        <description>Store all sensitive secrets (APP_SECRET_KEY, DATABASE_URL, etc.) in a .env file for local development or as environment variables in production; load them at startup via core.config_loader.load_config().</description>
     </rule>
 
     <rule id="9">
